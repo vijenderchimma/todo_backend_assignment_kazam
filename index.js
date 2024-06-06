@@ -16,7 +16,8 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 // Task Schema
 const taskSchema = new mongoose.Schema({
-    text: { type: String, unique: true }
+    text: String
+
 });
 
 const Task = mongoose.model('assignment_vijender', taskSchema);
@@ -24,15 +25,11 @@ const Task = mongoose.model('assignment_vijender', taskSchema);
 // Add new items to the list and save them to MongoDB
 app.post('/add', async (req, res) => {
     try {
-        const { task } = req.body;
+        const { text } = req.body;
+        console.log(text)
         
-        // Check if the task already exists
-        const taskFound = await Task.findOne({ text: task });
-        if (taskFound) {
-            return res.status(400).json({ message: 'Task already exists' });
-        }
 
-        const newTask = new Task({ text: task });
+        const newTask = new Task({text});
         await newTask.save();
 
         res.status(200).send('Task added successfully');
